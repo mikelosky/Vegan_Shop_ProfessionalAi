@@ -58,6 +58,7 @@ class Product_Management(Database):
     Classe per la gestione dell`inserimento e della vendita dei prodotti che eredita la classe per la gestione del
     Database
     """
+
     def start_managing(self):
         """
         Funzione adibita per la ricezione degli input utente
