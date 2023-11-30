@@ -170,7 +170,7 @@ class Product_Management(Database):
                     print("{:<8} {:<50}".format('aiuto', 'mostra i possibili comandi'))
                     print("{:<8} {:<50}".format('chiudi', 'esci dal programma'))
                 elif main_input.lower() == "chiudi":
-                    print("Arrivederci! ")
+                    print("Bye bye")
                     break
             else:
                 print("Comando non presente! \nPer avere l`elenco dei comandi disponibili inserire ===> aiuto")
