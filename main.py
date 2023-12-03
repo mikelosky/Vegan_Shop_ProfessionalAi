@@ -112,8 +112,9 @@ class Product_Management(Database):
                     gross_value_sells = 0
                     while True:
                         product_name = input("Nome del prodotto: ").capitalize()
-                        product = self.get_product(product_name)[0]
+                        product = self.get_product(product_name)
                         if product:
+                            product = product[0]
                             while True:
                                 try:
                                     product_sell = int(input("Quantità: "))
@@ -136,7 +137,7 @@ class Product_Management(Database):
                             net_value = ((product_sell * product["sell_price"]) - (
                                     product_sell * product["buy_price"])) + data_count["netto"]
                             file_count.close()
-                            new_data_count = json.dumps({"lordo": gross_value, "netto": net_value})
+                            new_data_count = json.dumps({"lordo": round(gross_value, 2), "netto": round(net_value, 2)})
                             file_count_write = open('./db/conti.json', 'w')
                             file_count_write.write(new_data_count)
                             file_count_write.close()
