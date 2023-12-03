@@ -7,6 +7,12 @@ import os
 class Database():
     """
     Classe per la gestione del database creato utilizzando file json
+    TinyDB è una libreria leggera per la gestione di database in Python. Essa offre un'interfaccia semplice e facile
+    da usare per memorizzare dati in un database JSON. Le principali funzioni di TinyDB includono la creazione e
+    gestione di database, l'aggiunta, la modifica e l'eliminazione di dati, nonché la query e l'accesso ai dati
+    memorizzati. È progettata per essere facile da integrare nei progetti Python grazie alla sua semplicità e
+    leggerezza, adatta soprattutto per applicazioni che richiedono operazioni di base su database di dimensioni
+    limitate.
     """
 
     def __init__(self):
