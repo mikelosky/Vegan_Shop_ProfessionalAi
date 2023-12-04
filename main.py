@@ -6,18 +6,16 @@ import os
 
 class Database():
     """
-    Classe per la gestione del database creato utilizzando file json
-    TinyDB è una libreria leggera per la gestione di database in Python. Essa offre un'interfaccia semplice e facile
-    da usare per memorizzare dati in un database JSON. Le principali funzioni di TinyDB includono la creazione e
-    gestione di database, l'aggiunta, la modifica e l'eliminazione di dati, nonché la query e l'accesso ai dati
-    memorizzati. È progettata per essere facile da integrare nei progetti Python grazie alla sua semplicità e
-    leggerezza, adatta soprattutto per applicazioni che richiedono operazioni di base su database di dimensioni
-    limitate.
+    Class for managing database created using json files TinyDB is a lightweight library for database management in
+    Python. It provides a simple and easy to use for storing data in a JSON database. The main functions of TinyDB
+    include creating and database management, adding, editing and deleting data, and querying and accessing data
+    stored. It is designed to be easy to integrate into Python projects due to its simplicity and lightness,
+    especially suitable for applications that require basic database operations of a limited size.
     """
 
     def __init__(self):
         """
-        Inizializzazione classe e creazione file per Database
+        Class initialization and file creation for Database
         """
         if not os.path.exists("./db"):
             os.mkdir("./db")
@@ -33,7 +31,7 @@ class Database():
 
     def insert_products(self, list_of_product, operation):
         """
-        Funzione per inserimento nuovi prodotti o aggiornamento quantita di quelli gia presenti
+        Function for entering new products or updating quantities of those already present
         """
         for product in list_of_product:
             query_res = self.db.search(self.all_products.name == product["name"])
@@ -48,26 +46,32 @@ class Database():
 
     def get_product(self, product_name):
         """
-        Funzione recuperare un prodotto dal Database
+        Function retrieve a product from the Database
         """
         return self.db.search(self.all_products.name == product_name)
 
     def get_all_products(self):
         """
-        Funzione per recuperare tutti gli elementi nel db
+        Function to retrieve all elements in the db
         """
         return self.db.all()
 
 
+class InvalidNegativeException(Exception):
+    """
+    Defining a class for a custom exception for detection applied when negative values are found
+    """
+    pass
+
+
 class Product_Management(Database):
     """
-    Classe per la gestione dell`inserimento e della vendita dei prodotti che eredita la classe per la gestione del
-    Database
+    Class for managing the entry and sale of products that inherits the class for managing the Database
     """
 
     def start_managing(self):
         """
-        Funzione adibita per la ricezione degli input utente
+        Dedicated function for receiving user input
         """
         while True:
             main_input = input("Inserisci un comando: ")
@@ -77,8 +81,12 @@ class Product_Management(Database):
                     while True:
                         try:
                             product_quantity = int(input("Quantità: "))
+                            if product_quantity < 0:
+                                raise InvalidNegativeException
                         except ValueError:
                             print("Inserimento invalido! \nRiprova... ")
+                        except InvalidNegativeException:
+                            print("Il valore non puo essere negativo! \nRiprova... ")
                         else:
                             break
                     if self.get_product(product_name):
@@ -88,15 +96,23 @@ class Product_Management(Database):
                         while True:
                             try:
                                 product_purchase = float(input("Prezzo di acquisto: "))
+                                if product_purchase < 0:
+                                    raise InvalidNegativeException
                             except ValueError:
                                 print("Inserimento invalido! \nRiprova... ")
+                            except InvalidNegativeException:
+                                print("Il valore non puo essere negativo! \nRiprova... ")
                             else:
                                 break
                         while True:
                             try:
                                 product_sale = float(input("Prezzo di vendita: "))
+                                if product_sale < 0:
+                                    raise InvalidNegativeException
                             except ValueError:
                                 print("Inserimento invalido! \nRiprova... ")
+                            except InvalidNegativeException:
+                                print("Il valore non puo essere negativo! \nRiprova... ")
                             else:
                                 break
                         self.insert_products([
@@ -126,10 +142,14 @@ class Product_Management(Database):
                                     product_sell = int(input("Quantità: "))
                                     if product_sell >= product["count"]:
                                         raise IndexError()
+                                    elif product_sell < 0:
+                                        raise InvalidNegativeException
                                 except ValueError:
                                     print("Inserimento invalido! \nRiprova... ")
                                 except IndexError:
                                     print("Quantita non sufficiente! \nRiprova... ")
+                                except InvalidNegativeException:
+                                    print("Il valore non puo essere negativo! \nRiprova... ")
                                 else:
                                     break
 
@@ -159,7 +179,7 @@ class Product_Management(Database):
                                 print("VENDITA REGISTRATA")
                                 for s in sells:
                                     print(f"{s[0]} x {s[1]}: € {s[2]}")
-                                print(f"Totale: {gross_value_sells}")
+                                print(f"Totale: {round(gross_value_sells, 2)}")
                                 break
                         else:
                             print("Prodotto non presente! \nRiprova... ")
@@ -185,6 +205,5 @@ class Product_Management(Database):
 
 
 if __name__ == "__main__":
-    # db = Database()
     pm = Product_Management()
     pm.start_managing()
